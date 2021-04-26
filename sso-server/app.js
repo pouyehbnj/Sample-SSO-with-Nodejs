@@ -26,7 +26,20 @@ app.set("view engine", "ejs");
 
 app.use("/simplesso", router);
 app.get("/", (req, res, next) => {
-  const user = req.session.user || "unlogged";
+  const users = Object.assign({}, JSON.parse(JSON.stringify(req.sessionStore.sessions)))
+  console.log(users)
+  for (var id in users) {
+    var user;
+    var cookie = JSON.parse(users[id])
+    if ("user" in cookie) {
+      user = cookie.user
+      break;
+    } else {
+      user = "unlogged"
+    }
+    console.log("THIS IS USER", user)
+  }
+
   res.render("index", {
     what: `SSO-Server ${user}`,
     title: "SSO-Server | Home",
